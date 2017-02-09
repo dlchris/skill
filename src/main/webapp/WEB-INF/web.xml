@@ -2,6 +2,9 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	version="3.1" metadata-complete="true">
+	<!-- web.xml中加载顺序 -->
+	<!-- listener -> filter -> servlet -->
+
 	<!--用maven创建的web-app需要修改servlet的版本为3.1 -->
 	<!--配置DispatcherServlet -->
 	<servlet>
@@ -17,7 +20,41 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>skill</servlet-name>
-		<!--默认匹配所有请求 restful风格配置-->
+		<!--默认匹配所有请求 restful风格配置 -->
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+	<!-- 配置shiro的filter -->
+	<!-- shiro过滤器，DelegatingFilterProxy通过代理模式将spring容器中的bean和filter关联起来 -->
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<!-- 设置true由servlet容器控制filter的生命周期 -->
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- 设置spring容器filter的bean id,如果不设置则找与filter-name一致的bean -->
+		<init-param>
+			<param-name>targetBeanName</param-name>
+			<param-value>shiroFilter</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!--配置spring容器监听器-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext-*.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <welcome-file-list>
+    	<welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

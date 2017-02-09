@@ -10,9 +10,9 @@
 		AND start_time <![CDATA[ <= ]]>
 		#{killTime}
 		AND end_time >= #{killTime}
-		AND number > 0;
+		AND number > 0
 	</update>
-	
+
 	<insert id="addNumber" parameterType="Seckill" keyProperty="seckillId">
 		INSERT ignore INTO seckill(name,number,end_time) VALUES (#{name},#{number},#{endTime})
 	</insert>
