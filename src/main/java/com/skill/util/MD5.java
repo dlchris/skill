@@ -2,6 +2,9 @@ package com.skill.util;
 
 import java.lang.reflect.Array;
 
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Md5Hash;
+
 /*******************************************************************************
  * md5 类实现了RSA Data Security, Inc.在提交给IETF 的RFC1321中的MD5 message-digest 算法。
  ******************************************************************************/
@@ -354,20 +357,25 @@ public class MD5 {
 		String s = new String(ob);
 		return s;
 	}
-
+	
 	public static void main(String args[]) {
 
 		MD5 m = new MD5();
 		if (Array.getLength(args) == 0) { // 如果没有参数，执行标准的Test Suite
-
-			System.out.println("MD5 Test suite:");
-			System.out.println("MD5(\"\"):" + m.getMD5ofStr(""));
-			System.out.println("MD5(\"a\"):" + m.getMD5ofStr("a"));
-			System.out.println("MD5(\"abc\"):" + m.getMD5ofStr("abc"));
-			System.out.println("MD5(\"message digest\"):" + m.getMD5ofStr("message digest"));
-			System.out.println("MD5(\"abcdefghijklmnopqrstuvwxyz\"):" + m.getMD5ofStr("abcdefghijklmnopqrstuvwxyz"));
-			System.out.println("MD5(\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\"):"
-					+ m.getMD5ofStr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
+			System.out.println("111111:"+ m.getMD5ofStr("111111eteokues"));
+			Md5Hash hash = new Md5Hash("111111","eteokues",1);
+			System.out.println(hash);
+//			System.out.println(generateSalt());
+			
+			
+//			System.out.println("MD5 Test suite:");
+//			System.out.println("MD5(\"\"):" + m.getMD5ofStr(""));
+//			System.out.println("MD5(\"a\"):" + m.getMD5ofStr("a"));
+//			System.out.println("MD5(\"abc\"):" + m.getMD5ofStr("abc"));
+//			System.out.println("MD5(\"message digest\"):" + m.getMD5ofStr("message digest"));
+//			System.out.println("MD5(\"abcdefghijklmnopqrstuvwxyz\"):" + m.getMD5ofStr("abcdefghijklmnopqrstuvwxyz"));
+//			System.out.println("MD5(\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\"):"
+//					+ m.getMD5ofStr("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"));
 		} else
 			System.out.println("MD5(" + args[0] + ")=" + m.getMD5ofStr(args[0]));
 

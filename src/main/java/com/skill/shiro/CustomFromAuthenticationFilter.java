@@ -10,7 +10,6 @@ import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 public class CustomFromAuthenticationFilter extends FormAuthenticationFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-
 		// 在这里进行验证码的校验
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpSession session = httpServletRequest.getSession();
@@ -25,6 +24,7 @@ public class CustomFromAuthenticationFilter extends FormAuthenticationFilter {
 			// 拒绝访问，不再校验账号和密码
 			return true;
 		}
+		//System.out.println(httpServletRequest.getMethod());
 		return super.onAccessDenied(request, response);
 	}
 }

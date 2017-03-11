@@ -71,7 +71,6 @@ public class CustomRealm extends AuthorizingRealm {
 		List<SysPermission> menus = null;
 		try {
 			menus = sysService.findMenuListByUserId(sysUser.getId());
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -84,8 +83,7 @@ public class CustomRealm extends AuthorizingRealm {
 		// 如果查询到，返回认证信息AuthenticationInfo
 
 		/// 将activeUser设置到simpleAuthenticationInfo
-		SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(activeUser, password,
-				ByteSource.Util.bytes(salt), this.getName());
+		SimpleAuthenticationInfo simpleAuthenticationInfo = new SimpleAuthenticationInfo(activeUser, password, ByteSource.Util.bytes(salt), this.getName());
 
 		return simpleAuthenticationInfo;
 	}
@@ -93,9 +91,8 @@ public class CustomRealm extends AuthorizingRealm {
 	// 用于授权
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-
 		// 从principals获取主身份信息
-		// 将getPrimaryPrincipal方法返回值转为真实身份类型(在上边的goGetAuthenticationInfo认证通过填充到SimpleAuthenticationInfo)
+		// 将getPrimaryPrincipal方法返回值转为真实身份类型(在上边的doGetAuthenticationInfo认证通过填充到SimpleAuthenticationInfo)
 		ActiveUser activeUser = (ActiveUser) principals.getPrimaryPrincipal();
 
 		// 根据身份信息获取权限信息,
@@ -118,10 +115,8 @@ public class CustomRealm extends AuthorizingRealm {
 
 		// 查到权限数据，返回授权信息(包括上边的permissions)
 		SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-
 		// 将上边查询到授权信息填充到simpleAuthorizationInfo对象中
 		simpleAuthorizationInfo.addStringPermissions(permissions);
-
 		return simpleAuthorizationInfo;
 	}
 

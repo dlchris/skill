@@ -52,12 +52,10 @@ public class ItemsController {
     public ModelAndView queryItems() throws Exception {
         //调用servie来查询商品列表
         List<ItemsCustom> itemsList=itemsService.findItemsList(null);
-
         ModelAndView modelAndView=new ModelAndView();
         modelAndView.addObject("itemsList",itemsList);
         //指定逻辑视图名itemsList.jsp
         modelAndView.setViewName("itemsList");
-
         return modelAndView;
     }
 

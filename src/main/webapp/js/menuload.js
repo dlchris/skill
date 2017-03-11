@@ -1,6 +1,4 @@
-﻿
-
-//打开标签窗口
+﻿//打开标签窗口
 var opentabwindow = function(tabTitle,url){
 	addTab(tabTitle,url,'icon icon-null');
 };
@@ -14,12 +12,12 @@ var menuclick = function(){
 		var menuid = $(this).attr("ref");
 		var icon = 'icon '+$(this).attr("icon");
 		addTab(tabTitle,url,icon);
-		$('.easyui-accordion li div').removeClass("selected");
-		$(this).parent().addClass("selected");
+		//$('.easyui-accordion li div').removeClass("selected");
+		//$(this).parent().addClass("selected");
 };
+
 //将后台获取的json菜单数据，组织成html
 function initMenu(menus_var) {
-		
 	$("#nav").accordion({animate:false}); 
 	//循环处理json的菜单数据，组织成html
     $.each(menus_var.menus, function(i, n) {//外层循环处理一级菜单
@@ -46,9 +44,7 @@ function initMenu(menus_var) {
 	},function(){
 		$(this).parent().removeClass("hover");
 	});
-
 }
-
 
 /**
  * 
@@ -63,7 +59,7 @@ function addTab(subtitle,url,icon){
 			title:subtitle,
 			content:createFrame(url),
 			closable:true,
-			icon:icon
+			iconCls:icon
 		});
 	}else{
 		//如果tabs已创建则选中

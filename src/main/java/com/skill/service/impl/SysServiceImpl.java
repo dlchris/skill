@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skill.dao.SysPermissionCustomDao;
 import com.skill.dao.SysUserDao;
@@ -14,9 +15,10 @@ import com.skill.entity.SysUserExample;
 import com.skill.exception.CustomException;
 import com.skill.service.SysService;
 import com.skill.util.MD5;
+import com.skill.util.PasswordHelper;
 @Service
 public class SysServiceImpl implements SysService {
-	//@Autowired
+	@Autowired
     private SysUserDao sysUserDao;
 
     @Autowired
@@ -24,22 +26,18 @@ public class SysServiceImpl implements SysService {
 
     @Override
     public ActiveUser authenticat(String userCode, String password) throws Exception {
-
         /**
          * 认证过程：
          * 根据用户身份（账号）查询数据库，如果查询不到用户不存在
          * 对输入的密码 和数据库密码 进行比对，如果一致，认证通过
          */
         SysUser sysUser=this.findSysUserByUserCode(userCode);
-
 		if (sysUser == null) {
 			// 抛出异常
 			throw new CustomException("用户帐号不存在");
 		}
-
         //数据库密码(md5加密)
         String password_db=sysUser.getPassword();
-
         //对输入的密码和数据库密码进行对比，如果一致则认证通过
         //对页面输入的密码进行md5加密
         String password_input_md5=new MD5().getMD5ofStr(password);
@@ -66,8 +64,6 @@ public class SysServiceImpl implements SysService {
         //放入权限范围的菜单和url
         activeUser.setMenus(menus);
         activeUser.setPermissions(permissions);
-
-
         return activeUser;
     }
 
@@ -76,13 +72,10 @@ public class SysServiceImpl implements SysService {
         SysUserExample sysUserExample=new SysUserExample();
         SysUserExample.Criteria criteria=sysUserExample.createCriteria();
         criteria.andUsercodeEqualTo(userCode);
-
         List<SysUser> list=sysUserDao.selectByExample(sysUserExample);
-
 		if (list != null && list.size() == 1) {
 			return list.get(0);
 		}
-
         return null;
     }
 
@@ -95,4 +88,33 @@ public class SysServiceImpl implements SysService {
     public List<SysPermission> findPermissionListByUserId(String userId) throws Exception {
         return sysPermissionMapperCustom.findPermissionListByUserId(userId);
     }
+
+	@Override
+	@Transactional
+	public int updatepwd(String userId, String newPassword) throws Exception {
+        SysUser sysUser = new SysUser();
+        sysUser.setId(userId);
+        sysUser.setSalt(PasswordHelper.generateSalt());
+        sysUser.setPassword(PasswordHelper.encryptPassword(newPassword, sysUser.getSalt()));
+        SysUserExample sysUserExample=new SysUserExample();
+        SysUserExample.Criteria criteria=sysUserExample.createCriteria();
+        criteria.andIdEqualTo(userId);
+        int rows = sysUserDao.updateByExampleSelective(sysUser, sysUserExample);
+
+//        System.out.println(sysUser.getPassword());
+
+// TODO 测试事务管理用
+//        if(1==1){
+//        	throw new SeckillCloseException("test");
+//        }
+//        sysUser.setId(userId);
+//        sysUser.setSalt(PasswordHelper.generateSalt());
+//        sysUser.setPassword(PasswordHelper.encryptPassword(newPassword, sysUser.getSalt()));
+//        sysUserExample=new SysUserExample();
+//        criteria=sysUserExample.createCriteria();
+//        criteria.andIdEqualTo(userId);
+//        rows = sysUserDao.updateByExampleSelective(sysUser, sysUserExample);
+//        System.out.println(sysUser.getPassword());
+        return rows;
+	}
 }
